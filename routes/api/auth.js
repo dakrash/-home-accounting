@@ -58,7 +58,7 @@ module.exports = function (db, express, hash) {
                 console.log('linkSignup')
                 console.log(linkSignup)
                 sentEmail(user.email, 'Подтверждение учетной записи', 'Для подтверждение учетной записи перейдите по ссылке ' + linkSignup);
-                res.status(200).json({'result': "ok"});
+                res.status(200).json({'result': [{message:"OK"}]});
             });
 
     });
@@ -73,7 +73,7 @@ module.exports = function (db, express, hash) {
                 let hour = Math.trunc(Date.now() / (1000 * 60 * 60)) + 1;
                 let linkReset = link + 'password?id=' + userId + '&min=' + min + '&key=' + md5(userId.toString() + hour.toString());
                 sentEmail(user.email, 'Сброс пароля', 'Для сброса текущего пароля перейдите по ссылке ' + linkReset);
-                res.status(200).json({'result': "ok"});
+                res.status(200).json({'result': [{message:"OK"}]});
             } else {
                 res.status(400).json({"result": 'Пользователя с таким email не существует'})
             }
