@@ -1,0 +1,28 @@
+<div id="forChange">
+    <div class="mt-4 mb-4 row justify-content-center">
+        <div class="col-auto mb-1">
+            <button data-act="cancel" class="btn btn-custom-ellipse btn-custom-red">
+                Отменить проведение чека
+            </button>
+        </div>
+        {{#if items}}
+            <div class="col-auto mb-1">
+                <button data-act="save" class="btn btn-custom-ellipse btn-custom-yellow">
+                    Сохранить ассоциации
+                </button>
+            </div>
+        {{else}}
+            <div class="col-auto mb-1">
+                <button data-act="refreshState" class="btn btn-custom-ellipse btn-custom-yellow">
+                    Обновить статус
+                </button>
+            </div>
+        {{/if}}
+        <div class="col-auto mb-1">
+            <button data-act="del" class="btn btn-custom-ellipse btn-custom-red">
+                Удалить чек
+            </button>
+        </div>
+    </div>
+    {{> receipts}}
+</div>

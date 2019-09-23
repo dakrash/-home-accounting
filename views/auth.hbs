@@ -1,0 +1,11 @@
+<form onsubmit="{{onsubmit}}" class="form-horizontal">
+    {{> formInputButton}}
+    {{#if login}}
+        <div class="form-group forgot-pass">
+            <a class="btn btn-default link" id="forgotPassword" href="/auth/reset">Забыли пароль?</a>
+        </div>
+        <div class="form-group" style="text-align: center">
+            <a class="btn btn-default link" style="margin-top: 0" id="registration" href="/auth/signup">Зарегистрироваться</a>
+        </div>
+    {{/if}}
+</form>

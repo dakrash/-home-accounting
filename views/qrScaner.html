@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <title>QR-Code Reader</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/vue-qrcode-reader.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.js"></script>
+    <script type="text/javascript" src="js/global.js"></script>
+    <script type="text/javascript" src="js/blockUI.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-qrcode-reader.browser.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+<div id="app">
+    <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+</div>
+</body>
+<script>
+    Vue.use(VueQrcodeReader)
+
+    new Vue({
+        el: '#app',
+
+        methods: {
+            onDecode(content) {
+                myAjaxMain('GET', 'receipts?' + content)
+                    .then((result) => {
+                        window.location = '/receipts/' + result[0].check_id;
+                    })
+                    .catch((err) => {
+                        showModalText('Ошибка', err.responseJSON.result, function () {
+                            location.reload()
+                        })
+                        // showModalEmpty('Ошибка', '<p>Ляля</p>', function () {
+                        //     location.reload()
+                        // })
+                    });
+            },
+
+            onInit(promise) {
+                promise.catch(error => {
+                    if (error.name === 'NotAllowedError') {
+                        this.errorMessage = "ERROR: you need to grant camera access permisson"
+                    } else if (error.name === 'NotFoundError') {
+                        this.errorMessage = 'Do you even have a camera on your device?'
+                    } else if (error.name === 'NotSupportedError') {
+                        this.errorMessage = 'Seems like this page is served in non-secure context (HTTPS, localhost or file://)'
+                    } else if (error.name === 'NotReadableError') {
+                        this.errorMessage = 'Couldn\'t access your camera. Is it already in use?'
+                    } else if (error.name === 'OverconstrainedError') {
+                        this.errorMessage = 'Constraints don\'t match any installed camera. Did you asked for the front camera although there is none?'
+                    } else {
+                        this.errorMessage = 'UNKNOWN ERROR: ' + error.message
+                    }
+                    showModalText('Ошибка', this.errorMessage)
+                })
+            }
+        }
+    })
+</script>
+</html>
+

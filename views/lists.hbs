@@ -1,0 +1,98 @@
+<div class="row">
+    <div class="col">
+        <div class="row my-3">
+            {{#each button}}
+                <div class="col-auto mb-2">
+                    <button class="btn {{this.class}} btn-custom-ellipse" id="{{this.id}}">{{this.text}}</button>
+                </div>
+            {{/each}}
+        </div>
+        {{#if cols}}
+            <div class="row">
+                <div class="col">
+                    <table id="datatable" class="table table-striped table-bordered display nowrap" cellspacing="0"
+                           style="width:100%">
+                        <thead>
+                        <tr>
+                            {{#each cols}}
+                                <th>{{this}}</th>
+                            {{/each}}
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        {{/if}}
+        {{#if rows}}
+            <div class="row">
+
+                <div class="col-12 center">
+                    <label data-id="{{rows.id}}" style="font-size: 25px">Список "{{rows.header}}"</label>
+                </div>
+            </div>
+            {{#each rows.categories}}
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <u class="form-text" style="padding: 20px; font-size: 20px">{{#if
+                                this.name}}{{this.name}}{{else}}Без категории{{/if}}</u>
+                    </div>
+                </div>
+                {{#if this.items}}
+                <div class="list-group">
+                    {{#each this.items}}
+                        <li data-name="{{this.name}}" data-idRow="{{this.idRow}}"
+                            class="list-group-item {{#if this.checkbox}}checkbox-on{{/if}}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="form-check">
+                                    <input {{#if this.checkbox}}checked{{/if}} type="checkbox" class="form-check-input"
+                                           id="checkProduct{{this.idRow}}">
+                                    <label class="form-check-label" for="checkProduct{{this.idRow}}">
+                                        {{this.name}} - {{this.quantity}}
+                                    </label>
+                                </div>
+                                <div>
+                                    <button data-act="del" class="btn btn-custom-red ml-3 mb-1 list-icon"><i
+                                            class="far fa-trash-alt"></i></button>
+                                    <button data-act="edit" class="btn btn-custom-yellow mb-1 list-icon"><i
+                                            class="far fa-edit"></i></button>
+                                </div>
+                            </div>
+                            <small class="mb-1">{{this.comment}}</small>
+                        </li>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                {{#each this.subcategories}}
+                    <div class="list-group">
+                        <li class="list-group-item active-back">
+                            <u class="form-text">{{this.name}}</u>
+                        </li>
+                        {{#each this.items}}
+                            <li data-name="{{this.name}}" data-idRow="{{this.idRow}}"
+                                class="list-group-item {{#if this.checkbox}}checkbox-on{{/if}}">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div class="form-check">
+                                        <input {{#if this.checkbox}}checked{{/if}} type="checkbox"
+                                               class="form-check-input" id="checkProduct">
+                                        <label class="form-check-label" for="checkProduct">
+                                            {{this.name}} - {{this.quantity}}
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <button data-act="del" class="btn btn-custom-red ml-3 mb-1 list-icon"><i
+                                                class="far fa-trash-alt"></i></button>
+                                        <button data-act="edit" class="btn btn-custom-yellow mb-1 list-icon"><i
+                                                class="far fa-edit"></i></button>
+                                    </div>
+                                </div>
+                                <small class="mb-1">{{this.comment}}</small>
+                            </li>
+                        {{/each}}
+                    </div>
+                {{/each}}
+            {{/each}}
+        {{/if}}
+    </div>
+
+</div>

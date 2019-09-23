@@ -1,0 +1,25 @@
+version: "3"
+services:
+  app:
+#    image: dkrash/myapp:latest
+    build:
+      context: ./
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres@postgres:5430/postgres
+      NODE_ENV: development
+      PORT: 8080
+    ports:
+      - "8080:8080"
+#    command: node index.js
+#    volumes:
+#      - .:/usr/src/app
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres

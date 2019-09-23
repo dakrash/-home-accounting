@@ -1,0 +1,64 @@
+<div id="elemForChange">
+    <div class="row">
+        <div class="col-7 col-md-4 col-lg-3">
+            <label for="datepicker">
+                Дата
+            </label>
+            <input {{#if date}}value="{{date}}"{{/if}} id="datepicker">
+        </div>
+        <div class="col-12 col-md">
+            <label for="comment">
+                Комментарий
+            </label>
+            <input {{#if comment}}value="{{comment}}"{{/if}} id="comment">
+        </div>
+        <div class="col-12">
+            <label for="wallets">
+                Кошелек
+            </label>
+            <select class="selectpicker" id="wallets">
+                <option></option>
+                {{#each wallets}}
+                    <option value="{{this.id}}" {{this.select}}>{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col-auto">
+            <button type="button" id="addRow" class="btn btn-custom-ellipse btn-custom-yellow">
+                Добавить строку
+            </button>
+        </div>
+    </div>
+    <div id="elemsTransaction" {{#if idTransaction}}data-idTransaction="{{idTransaction}}"{{/if}} data-typeTransaction="{{#if type.products}}expense{{else}}refill{{/if}}">
+        {{#if elemsTransaction}}
+            {{#each elemsTransaction}}
+                {{> transactionRow}}
+            {{/each}}
+        {{else}}
+            {{> transactionRow}}
+        {{/if}}
+    </div>
+    <div class="row justify-content-center">
+
+        {{#if elemsTransaction}}
+            <div class="col-auto">
+                <button class="btn btn-custom-yellow btn-custom-ellipse mb-2" data-act="save">
+                    Сохранить изменения
+                </button>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-custom-ellipse btn-custom-red" data-act="del">
+                    Удалить транзакцию
+                </button>
+            </div>
+        {{else}}
+            <div class="col-auto">
+                <button class="btn btn-custom-yellow btn-custom-ellipse" data-act="success">
+                    Провести транзакцию
+                </button>
+            </div>
+        {{/if}}
+    </div>
+</div>

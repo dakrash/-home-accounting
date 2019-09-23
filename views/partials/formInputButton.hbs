@@ -1,0 +1,13 @@
+{{#each elem}}
+    <div class="form-group">
+        <label for={{this.id}}>{{{this.label}}}</label>
+        <div class="row">
+            <div class="col">
+            <input type={{this.type}} id={{this.id}}>
+            </div>
+        </div>
+    </div>
+{{/each}}
+<div class="form-group">
+    <button type="submit" class="btn btn-custom-ellipse btn-custom-yellow btn-100">{{buttonText}}</button>
+</div>

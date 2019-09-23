@@ -1,0 +1,129 @@
+<div class="mt-4 row">
+    <div class="col-auto">
+        <label for="wallets">
+            Кошелек
+        </label>
+        <select class="selectpicker" id="wallets">
+            <option></option>
+            {{#each wallets}}
+                <option value="{{this.id}}" {{this.select}}>{{this.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+</div>
+<div class="mt-4 row">
+    <div class="col-auto">
+        <label>Дата совершения покупки : {{receipt.date}}</label>
+    </div>
+</div>
+<div class="mt-4 row">
+    <div class="col-auto">
+        <label>Удаленный статус : <span style="color:{{#if receipt.remote_state}}green{{else}}red{{/if}}">{{#if
+                receipt.remote_state}}Найден{{else}}Не найден{{/if}}</span></label>
+    </div>
+</div>
+<div class="mt-4 row">
+    <div class="col-auto">
+        <label>Статус : <span style="color:{{#if receipt.state}}green{{else}}red{{/if}}">{{#if receipt.state}}
+            Проведен{{else}}Не проведен{{/if}}</span></label>
+    </div>
+</div>
+<div class="mt-4 mb-4 row justify-content-center">
+    <div class="col">
+        <table data-id="{{id}}" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+            <tr>
+                <th scope="col">Выбрать продукт</th>
+                <th scope="col">Наименование</th>
+                <th scope="col">Количество</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#if items}}
+                {{#each items}}
+                    <tr {{#if this.selectRow}}class="tr-on"{{/if}} data-rowId="{{this.id}}">
+                        <td>
+                            <div class="form-group">
+                                <label>Выберите продукт и количество</label>
+                                <select data-rowId="{{this.id}}" data-type="product" class="selectpicker"
+                                        data-live-search="true">
+                                    {{#if this.recommendProduct}}
+                                        <optgroup label="Рекомендованные">
+                                            {{#each this.recommendProduct}}
+                                                <option value="{{this.id}}">{{this.name}}, {{this.unit}}</option>
+                                            {{/each}}
+                                        </optgroup>
+                                    {{/if}}
+                                    <optgroup label="Не выбрано">
+                                        <option {{#if this.select}}{{else}}{{#if
+                                                this.recommendProduct}}{{else}}selected{{/if}}{{/if}}></option>
+                                    </optgroup>
+                                    <optgroup label="Все продукты">
+                                        {{#each this.products}}
+                                            <option {{this.select}} value="{{this.id}}">{{this.name}}
+                                                , {{this.unit}}</option>
+                                        {{/each}}
+                                    </optgroup>
+                                </select>
+                                <div class="row mt-3">
+                                    <div class="col qty">
+                                        <div class="row">
+                                            <div class="col-auto" style="padding-right: 0 !important;">
+                                                    <span class="minus btn-custom-yellow btn-number" disabled="disabled"
+                                                          data-type="minus" data-field="quant[{{@index}}]">
+                                                        -
+                                                    </span>
+                                            </div>
+                                            <div class="col">
+                                                <input data-rowId="{{this.id}}" type="text" name="quant[{{@index}}]"
+                                                       class="input-number count" value="{{#if
+                                                        this.product_quantity}}{{this.product_quantity}}{{else}}{{this.quantity}}{{/if}}"
+                                                       min="1"
+                                                       max="100">
+                                            </div>
+                                            <div class="col-auto" style="padding-left: 0 !important;">
+                                                    <span class="plus btn-custom-yellow btn-number" data-type="plus"
+                                                          data-field="quant[{{@index}}]">
+                                                        +
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Или выберите категорию</label>
+                                <select data-rowId="{{this.id}}" data-type="category" class="selectpicker"
+                                        data-live-search="true">
+                                    <option></option>
+                                    {{#each this.categories}}
+                                        <option {{#if this.select}}selected{{/if}}
+                                                value="{{this.id}}">{{this.nameWithParent}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </td>
+                        <td>{{this.name}}</td>
+                        <td>{{this.quantity}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.sum}}</td>
+                    </tr>
+                {{/each}}
+            {{else}}
+                <tr>
+                    <td colspan="5" class="center">Записи в таблице отсутствуют</td>
+                </tr>
+            {{/if}}
+            <tr class="footer">
+                <td>Итог:</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{totalSum}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

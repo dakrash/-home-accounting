@@ -1,0 +1,94 @@
+<div id="elemForChange">
+    <div class="row">
+        <div class="col-7 col-md-4 col-lg-3">
+            <label for="datepicker">
+                Дата
+            </label>
+            <input id="datepicker">
+        </div>
+        <div class="col-12 col-md">
+            <label for="comment">
+                Комментарий
+            </label>
+            <input id="comment">
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col-auto">
+            <button type="button" id="addRow" class="btn btn-custom-ellipse btn-custom-yellow">
+                Добавить строку
+            </button>
+        </div>
+    </div>
+    <div id="elemsTransaction" data-typeTransaction="{{#if products}}expense{{else}}refill{{/if}}">
+        {{#if elemsTransaction}}
+            {{#each elemsTransaction}}
+
+            {{/each}}
+        {{/if}}
+        <div data-row="1" class="row mb-5">
+            <div class="col-12 col-sm-6 col-md-3 col-lg">
+                <label>Тип ассоциирования</label>
+                <select class="selectpicker" data-type="associate">
+                    {{#if products}}
+                        <option value="product">Продукт</option>
+                    {{/if}}
+                    <option value="category">Категория</option>
+                </select>
+            </div>
+            {{#if products}}
+                <div data-for="products" class="col-12 col-sm-6 col-md-3 col-lg">
+                    <label>Выберите продукт</label>
+                    <select data-type="product" class="selectpicker">
+                        <option></option>
+                        {{#each products}}
+                            <option value="{{this.product_id}}">{{this.product_name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div data-for="products" class="col-12 col-sm-6 col-md-3 col-lg qty">
+                    <label>Укажите количество</label>
+                    <div class="row">
+                        <div class="col-auto" style="padding-right: 0 !important;">
+                <span class="minus btn-custom-yellow btn-number" disabled="disabled" data-type="minus"
+                      data-field="quant[1]">-</span>
+                        </div>
+                        <div class="col">
+                            <input data-type="quantity" type="text" name="quant[1]" class="input-number count" value="1"
+                                   min="1" max="100">
+                        </div>
+                        <div class="col-auto" style="padding-left: 0 !important;">
+                            <span class="plus btn-custom-yellow btn-number" data-type="plus"
+                                  data-field="quant[1]">+</span>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+            <div data-for="categories" class="col-12 col-sm-6 col-md-4 col-lg {{#if products}}hidden{{/if}}">
+                <label>Выберите категорию</label>
+                <select data-type="category" class="selectpicker">
+                    <option></option>
+                    {{#each categories}}
+                        <option value="{{this.id}}">{{this.nameWithParent}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="col-12 col-sm-6 col-md">
+                <label>Укажите сумму</label>
+                <input data-type="summ" type="text" class="input-number count" value="0">
+
+            </div>
+            <div class="col-12 col-md-auto" style="text-align: center">
+                <i class="fas fa-times" data-act="del"
+                   style="color: red; line-height: 65px; font-size: 20px; cursor: pointer"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <button class="btn btn-custom-yellow btn-custom-ellipse" data-act="success">
+                Провести транзакцию
+            </button>
+        </div>
+    </div>
+</div>

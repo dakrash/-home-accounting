@@ -1,0 +1,72 @@
+<div data-row="{{#if this.sum}}{{@index}}{{else}}0{{/if}}" {{#if this.sum}}
+     data-id="{{this.id}}"{{/if}} class="row mb-5">
+    <div data-type="col" class="col-12 col-sm-6 col-md-3 col-lg">
+        <label>Тип ассоциирования</label>
+        <select class="selectpicker" data-type="associate">
+            {{#if products}}
+                <option value="product" {{#if type.products}}selected{{/if}}>
+                    Продукт
+                </option>
+            {{/if}}
+            <option value="category" {{#if type.categories}}selected{{/if}}>
+                Категория
+            </option>
+        </select>
+    </div>
+
+    <div data-type="col" class="col-12 col-sm-6 col-md-3 col-lg {{#if type.categories}}hidden{{/if}}">
+        <label>Выберите продукт</label>
+        <select data-type="product" class="selectpicker">
+            <option></option>
+            {{#each products}}
+                <option value="{{this.product_id}}" {{this.select}}>
+                    {{this.product_name}}, {{this.unit_name}}
+                </option>
+            {{/each}}
+        </select>
+    </div>
+    <div data-type="col" class="col-12 col-sm-6 col-md-3 col-lg qty {{#if type.categories}}hidden{{/if}}">
+        <label>Укажите количество</label>
+        <div class="row">
+            <div class="col-auto" style="padding-right: 0 !important;">
+                <span class="minus btn-custom-yellow btn-number" disabled="disabled" data-type="minus"
+                      data-field="quant[{{#if this.quantity}}{{@index}}{{else}}0{{/if}}]">
+                    -
+                </span>
+            </div>
+            <div class="col">
+                <input data-type="quantity" type="text"
+                       name="quant[{{#if this.quantity}}{{@index}}{{else}}0{{/if}}]"
+                       class="input-number count"
+                       value="{{#if this.quantity}}{{this.quantity}}{{else}}1{{/if}}"
+                       min="1" max="100">
+            </div>
+            <div class="col-auto" style="padding-left: 0 !important;">
+                    <span class="plus btn-custom-yellow btn-number" data-type="plus"
+                          data-field="quant[{{#if this.quantity}}{{@index}}{{else}}0{{/if}}]">
+                        +
+                    </span>
+            </div>
+        </div>
+    </div>
+    <div data-type="col" class="col-12 col-sm-6 col-md-4 col-lg {{#if type.products}}hidden{{/if}}">
+        <label>Выберите категорию</label>
+        <select data-type="category" class="selectpicker">
+            <option></option>
+            {{#each categories}}
+                <option value="{{this.id}}" {{this.select}}>
+                    {{this.nameWithParent}}
+                </option>
+            {{/each}}
+        </select>
+    </div>
+    <div data-type="col" class="col-12 col-sm-6 col-md">
+        <label>Укажите сумму</label>
+        <input value="{{#if this.sum}}{{this.sum}}{{else}}0{{/if}}" data-type="summ" type="text"
+               class="input-number count">
+    </div>
+    <div data-type="col" class="col-12 col-md-auto" style="text-align: center">
+        <i class="fas fa-times" data-act="delRow"
+           style="color: red; line-height: 65px; font-size: 20px; cursor: pointer"></i>
+    </div>
+</div>

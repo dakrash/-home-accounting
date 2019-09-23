@@ -1,0 +1,26 @@
+<div class="row justify-content-center mt-2">
+    <div class="col col-md-9 col-lg-8">
+        <form onsubmit="{{onsubmit}}" class="form-horizontal">
+            {{> formInputButton}}
+        </form>
+    </div>
+</div>
+{{#if receipt}}
+<div id="forChange">
+    <div class="mt-4 mb-4 row justify-content-center">
+        <div class="col-auto mb-1">
+            <button data-act="success" class="btn btn-custom-ellipse btn-custom-yellow">
+                Провести чек
+            </button>
+        </div>
+        {{#if items}}
+            <div class="col-auto mb-1">
+                <button data-act="save" class="btn btn-custom-ellipse btn-custom-yellow">
+                    Сохранить ассоциации
+                </button>
+            </div>
+        {{/if}}
+    </div>
+    {{> receipts}}
+</div>
+{{/if}}

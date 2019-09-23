@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+{{> head}}
+<body>
+<div class="modal fade" id="centralModalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-success" role="document">
+        {{{ body }}}
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#centralModalSuccess').modal()
+    })
+</script>
+</body>
+</html>
