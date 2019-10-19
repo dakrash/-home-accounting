@@ -10,13 +10,13 @@ module.exports = function (db, express, userId) {
         getProductList(db, userId, res)
             .then((rows) => {
                 let result = {};
-                rows.forEach(function (el, i) {
-                    if (el.parentcategoryname) {
-                        el.categoryNameWithParent = el.parentcategoryname + ' -> ' + el.category_name
-                    } else {
-                        el.categoryNameWithParent = el.category_name
-                    }
-                });
+                // rows.forEach(function (el, i) {
+                //     if (el.parentcategoryname) {
+                //         el.categoryNameWithParent = el.parentcategoryname + ' -> ' + el.category_name
+                //     } else {
+                //         el.categoryNameWithParent = el.category_name
+                //     }
+                // });
                 result.data = rows;
                 res.status(200).send(result)
             })

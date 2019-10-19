@@ -4,7 +4,7 @@ $(document).ready(function () {
         "ajax": "/table/category",
         'columns': [
             {'data': 'type'},
-            {'data': 'nameWithParent'},
+            {'data': 'namewithparent'},
             {
                 'className': 'center',
                 'orderable': false,
