@@ -1,21 +1,12 @@
 module.exports = function (db, userId, res,) {
     return new Promise((resolve, reject) => {
-        db.query(res, 'select * from category where user_id = $1 order by coef, parent_id, name', [userId])
+        db.query(res, 'select c1.*, coalesce(c2.name || \' -> \', \'\')  || c1.name as nameWithParent from category as c1 left join category as c2 on c1.parent_id = c2.id where c1.user_id = $1 order by c1.coef, nameWithParent, c1.parent_id, c1.name', [userId])
             .then((rows) => {
                 rows.forEach(function (el, i) {
                     if (el.coef === 1) {
                         el.type = 'Пополнение'
                     } else if (el.coef === -1) {
                         el.type = 'Расход'
-                    }
-                    if (el.parent_id) {
-                        rows.forEach(function (elem, j) {
-                            if (el.parent_id === elem.id) {
-                                el.nameWithParent = elem.name + ' -> ' + el.name
-                            }
-                        })
-                    } else {
-                        el.nameWithParent = el.name
                     }
                 });
                 resolve(rows)

@@ -93,16 +93,25 @@ module.exports = function (db, express, userId) {
     router.post('/edit/:idCategory', function (req, res, next) {
         let idCategory = req.params.idCategory;
         let nameCategory = req.body.nameCategory;
-        let parentId = req.body.parentId
+        let parentId = req.body.parentId;
         db.query(res, 'select * from category where user_id = $1 and name = $2 and id != $3', [userId, nameCategory, idCategory])
             .then((row) => {
                 if (row.length > 0) {
                     res.status(409).json({'result': 'Наименование категории должно быть уникальным'})
                 } else {
-                    db.query(res, 'update category set updateDate = $1, name = $2, parent_id = $3 where id = $4', [new Date(), nameCategory, parentId, idCategory])
-                        .then(() => {
-                            res.status(200).json({'result': [{'message': 'ОК'}]})
+                    // if(parentId != null){}
+                    db.query(res, 'select * from category where parent_id = $1', [idCategory])
+                        .then((childCategories) => {
+                            if((parentId !== null && childCategories.length === 0) || parentId == null){
+                                db.query(res, 'update category set updateDate = $1, name = $2, parent_id = $3 where id = $4', [new Date(), nameCategory, parentId, idCategory])
+                                    .then(() => {
+                                        res.status(200).json({'result': [{'message': 'ОК'}]})
+                                    })
+                            } else{
+                                res.status(400).json({'result': "Невозможно создать несколько уровней ролительских категорий"})
+                            }
                         })
+
                 }
             })
     });
@@ -110,14 +119,17 @@ module.exports = function (db, express, userId) {
     router.post('/del/:idCategory', function (req, res) {
         let idCategory = req.params.idCategory;
         let idMoveToCategory = req.body.idMoveToCategory;
-        db.query(res, 'update products as p set category_id = $1 from category as c where (c.id = $2 or c.parent_id = $2) and p.category_id = c.id', [idMoveToCategory, idCategory])
+        db.query(res, 'update shopping_list_product as sl set category_id = $1 from category as c where (c.id = $2 or c.parent_id = $2) and sl.category_id = c.id', [idMoveToCategory, idCategory])
             .then((row) => {
-                db.query(res, 'update transactions as t set category_id = $1 from category as c where (c.id = $2 or c.parent_id = $2) and t.category_id = c.id', [idMoveToCategory, idCategory])
+                db.query(res, 'update products as p set category_id = $1 from category as c where (c.id = $2 or c.parent_id = $2) and p.category_id = c.id', [idMoveToCategory, idCategory])
                     .then(() => {
-                        db.query(res, 'delete from category where id = $1 or parent_id = $1', [idCategory])
+                        db.query(res, 'update transactions as t set category_id = $1 from category as c where (c.id = $2 or c.parent_id = $2) and t.category_id = c.id', [idMoveToCategory, idCategory])
                             .then(() => {
-                                res.status(200).json({'result': [{'message': 'ОК'}]})
+                                db.query(res, 'delete from category where id = $1 or parent_id = $1', [idCategory])
+                                    .then(() => {
+                                        res.status(200).json({'result': [{'message': 'ОК'}]})
 
+                                    })
                             })
                     })
             })

@@ -45,7 +45,7 @@ module.exports = function (db, express, userId) {
         }
     );
 
-    router.get('/includeInLists/:productId', function (req, res, next) {
+    router.get('/includeInLists/:productId', function (req, res) {
         let productId = req.params.productId;
         db.query(res, 'select sl.name from shopping_list_product as slp join shopping_list as sl on sl.id = slp.shopping_list_id where slp.product_id = $1', [productId])
             .then((rows) => {
@@ -56,16 +56,20 @@ module.exports = function (db, express, userId) {
     router.post('/del/:productId', function (req, res, next) {
             let productId = req.params.productId;
             db.query(res, 'select category_id from products where id = $1', [productId])
-                .then((product) => {
-                    db.query(res, 'update transactions set product_id = $1, quantity = $1, category_id = $2 where product_id = $3', [null, product[0].category_id, productId])
+                .then((category) => {
+                    db.query(res, 'update transactions set product_id = $1, quantity = $1, category_id = $2 where product_id = $3', [null, category[0].category_id, productId])
                         .then(() => {
-                            db.query(res, 'delete from shopping_list_product where product_id = $1', [productId])
+                            db.query(res, 'update checkproducts set product_id = $1, product_quantity = $1, category_id = $2 where product_id = $3', [null, category[0].category_id, productId])
                                 .then(() => {
-                                    db.query(res, 'delete from products where id = $1', [productId])
-                                        .then((row) => {
-                                            res.status(200).json({'result': [{'message': 'ОК'}]})
+                                    db.query(res, 'delete from shopping_list_product where product_id = $1', [productId])
+                                        .then(() => {
+                                            db.query(res, 'delete from products where id = $1', [productId])
+                                                .then((row) => {
+                                                    res.status(200).json({'result': [{'message': 'ОК'}]})
+                                                })
                                         })
                                 })
+
                         })
                 })
         }

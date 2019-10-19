@@ -25,8 +25,9 @@ module.exports = function (db, express, userId) {
     router.get('/category', function (req, res) {
         getCategory(db, userId, res)
             .then((rows) => {
+                console.log("categories");
+                console.log(rows);
                 let result = {};
-
                 result.data = rows;
                 res.status(200).send(result)
             })
