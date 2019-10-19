@@ -74,6 +74,7 @@ module.exports = function (db, express, userId) {
     });
 
     router.post('/add', function (req, res, next) {
+        console.log("add category");
         let nameCategory = req.body.nameCategory;
         let parentId = req.body.parentId;
         let type = req.body.type;
