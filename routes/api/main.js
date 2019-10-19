@@ -13,7 +13,7 @@ module.exports = function (db, express, hash) {
         checkToken(token, hash, db, res)
             .then(() => {
                 console.log('api');
-                console.log(req);
+                console.log(req.body);
                 var lists = require('./lists')(db, express, userId);
                 let receipts = require('./receipts')(db, express, userId);
                 let transactions = require('./transactions')(db, express, userId);
