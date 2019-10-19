@@ -1,5 +1,5 @@
 module.exports =
     "postgres://postgres@" +
-    "postgres" +
-    // "localhost"+
+    // "postgres" +
+    "localhost"+
     ":5432/postgres";
