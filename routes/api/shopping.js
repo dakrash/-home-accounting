@@ -1,11 +1,19 @@
 module.exports = function (db, express, userId) {
     let router = express.Router();
     let getList = require('../../services/getList');
+    let getLists = require('../../services/getShoppingLists');
 
 
     let position = require('./position')(db, express)
 
-    router.use('/position', position)
+    router.use('/position', position);
+
+    router.get('/', function (req, res, next) {
+        getLists(db, res, userId)
+            .then((rows) => {
+                res.status(200).send({'result': rows})
+            })
+    })
 
     router.get('/getName/:id', function (req, res, next) {
         let idList = req.params.id;
@@ -38,6 +46,7 @@ module.exports = function (db, express, userId) {
     })
 
     router.post('/add', function (req, res, next) {
+        console.log('test shopping add');
         let nameList = req.body.nameList;
         db.query(res, 'insert into shopping_list(user_id, name, createdate) values($1, $2, $3)', [userId, nameList, new Date()])
             .then((rows) => {

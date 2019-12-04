@@ -5,17 +5,17 @@ module.exports = function (db, express, userId) {
     router.get('/', function (req, res, next) {
         getCategory(db, userId, res)
             .then((rows) => {
-                rows.forEach(function (el, i) {
-                    if (el.parent_id) {
-                        rows.forEach(function (elem, j) {
-                            if (el.parent_id === elem.id) {
-                                el.nameWithParent = elem.name + ' -> ' + el.name
-                            }
-                        })
-                    } else {
-                        el.nameWithParent = el.name
-                    }
-                });
+                // rows.forEach(function (el, i) {
+                //     if (el.parent_id) {
+                //         rows.forEach(function (elem, j) {
+                //             if (el.parent_id === elem.id) {
+                //                 el.nameWithParent = elem.name + ' -> ' + el.name
+                //             }
+                //         })
+                //     } else {
+                //         el.nameWithParent = el.name
+                //     }
+                // });
                 res.status(200).json({'result': rows})
             })
     });
