@@ -15,6 +15,13 @@ module.exports = function (db, express, userId) {
             })
     })
 
+    router.get('/new', function (req, res, next) {
+        getLists(db, res, userId)
+            .then((rows) => {
+                res.status(200).send(rows)
+            })
+    })
+
     router.get('/getName/:id', function (req, res, next) {
         let idList = req.params.id;
         getList(db, idList, userId, res)
