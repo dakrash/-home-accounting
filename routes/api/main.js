@@ -22,9 +22,14 @@ module.exports = function (db, express, hash) {
                 router.use('/transactions', transactions);
                 next()
             })
-            .catch(() => {
+            .catch(error => {
+                console.log(error);
                 res.status(401).json({'result': 'unauthorized'})
             });
+    });
+
+    router.get('/checkKey', function (req, res) {
+        res.status(200).json({'result' : "OK"})
     });
 
     router.get('/profileData', function (req, res) {

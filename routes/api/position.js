@@ -62,7 +62,7 @@ module.exports = function (db, express) {
         let idRow = req.params.idRow;
         db.query(res, 'delete from shopping_list_product where id = $1', [idRow])
             .then(() => {
-                res.status(200).send({result:[{message:'OK'}]})
+                res.status(200).send({result: [{message: 'OK'}]})
             })
     });
 
@@ -101,6 +101,36 @@ module.exports = function (db, express) {
         db.query(res, reqText, params)
             .then((rows) => {
                 res.status(200).send({'result': [{message: 'OK'}]})
+            })
+    })
+
+
+    router.post('/:idList/addArrProd', function (req, res) {
+        let idList = req.params.idList;
+        let reqText = 'insert into shopping_list_product(checkbox, createdate, shopping_list_id, quantity, comment, product_id) values';
+        let allParams = [];
+        req.body.products.forEach((prod, i) => {
+            let productId = prod.id;
+            let productQuantity = prod.quantity;
+            let productComment = prod.comment;
+            let params = [0, new Date(), idList, productQuantity, productComment ? productComment : "", productId];
+            if (i > 0) {
+                reqText += ','
+            }
+            reqText += ' (';
+            params.forEach(function (el, j) {
+                if (j > 0)
+                    reqText += ', ';
+                reqText += '$' + (allParams.length + 1);
+                allParams.push(el)
+            });
+            reqText += ')';
+
+        });
+        console.log(reqText, allParams);
+        db.query(res, reqText, allParams)
+            .then(() => {
+                res.sendStatus(200)
             })
     })
 

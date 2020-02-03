@@ -20,6 +20,24 @@ module.exports = function (db, express, userId) {
             })
     });
 
+    router.get('/app', function (req, res, next) {
+        getCategory(db, userId, res)
+            .then((rows) => {
+                console.log(rows)
+                res.status(200).json(rows.map(row => {
+                    var result = {};
+                    result.id = row.id;
+                    result.name = row.name;
+                    result.coef = row.coef;
+                    result.parentId = row.parent_id
+                    result.parentName = row.parentname
+                    console.log(result);
+                    return result
+
+                }))
+            })
+    });
+
     router.get('/all/:coef', function (req, res, next) {
         let coef = req.params.coef;
         getCategory(db, userId, res)
@@ -86,6 +104,24 @@ module.exports = function (db, express, userId) {
                     db.query(res, 'INSERT INTO category(createDate, user_id, name, parent_id, coef) values ($1, $2, $3, $4, $5)', [new Date(), userId, nameCategory, parentId, type])
                         .then(() => {
                             res.status(200).json({'result': [{'message': 'ОК'}]})
+                        })
+                }
+            })
+    });
+
+    router.post('/add/app', function (req, res, next) {
+        console.log("add app category");
+        let nameCategory = req.body.nameCategory;
+        let parentId = req.body.parentId;
+        let type = req.body.type;
+        db.query(res, 'select * from category where user_id = $1 and name = $2 and coef = $3', [userId, nameCategory, type])
+            .then((row) => {
+                if (row.length > 0) {
+                    res.status(409).json({'result': 'Категория должна быть уникальной'})
+                } else {
+                    db.query(res, 'INSERT INTO category(createDate, user_id, name, parent_id, coef) values ($1, $2, $3, $4, $5) returning id', [new Date(), userId, nameCategory, parentId, type])
+                        .then((row) => {
+                            res.status(200).json({'result': row[0].id})
                         })
                 }
             })

@@ -15,6 +15,16 @@ module.exports = function (db, express, userId) {
             });
     });
 
+    router.get('/:check_id/app', function (req, res) {
+        getCheck(db, req.params.check_id, res)
+            .then((rows) => {
+                res.json(rows)
+            })
+            .catch(() => {
+                res.sendStatus(404)
+            });
+    });
+
     router.post('/:check_id/success', function (req, res) {
         let checkId = req.params.check_id;
         let walletId = req.body.walletId;

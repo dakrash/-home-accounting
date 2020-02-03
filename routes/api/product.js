@@ -9,6 +9,25 @@ module.exports = function (db, express, userId) {
             })
     });
 
+    router.get('/app', function (req, res, next) {
+        getProductList(db, userId, res)
+            .then((rows) => {
+                res.status(200).send(rows.map(row => {
+                    const result = {};
+                    result.id = row.product_id;
+                    result.name = row.product_name;
+                    result.categoryId = row.category_id;
+                    result.categoryName = row.category_name;
+                    result.categoryCoef = row.category_coef;
+                    result.categoryParentId = row.category_parent_id;
+                    result.categoryParentName = row.parentCategoryName;
+                    result.unit = row.unit_name;
+                    console.log(result);
+                    return result
+                }))
+            })
+    });
+
     router.post('/add', function (req, res, next) {
         let nameProduct = req.body.nameProduct;
         let categoryId = req.body.categoryId;
@@ -21,6 +40,24 @@ module.exports = function (db, express, userId) {
                     db.query(res, 'INSERT INTO products(createDate, user_id, name, category_id, unit) values ($1, $2, $3, $4, $5)', [new Date(), userId, nameProduct, categoryId, unit])
                         .then(() => {
                             res.status(200).json({'result': [{'message': 'ОК'}]})
+                        })
+                }
+            })
+    });
+
+    router.post('/add/app', function (req, res, next) {
+        let nameProduct = req.body.nameProduct;
+        let categoryId = req.body.categoryId;
+        let unit = req.body.unit;
+        db.query(res, 'select * from products where category_id = $1 and name = $2 and unit = $3', [categoryId, nameProduct, unit])
+            .then((row) => {
+                if (row.length > 0) {
+                    res.status(409).json({'result': 'Продукт должен быть уникальным в своей категории'})
+                } else {
+                    db.query(res, 'INSERT INTO products(createDate, user_id, name, category_id, unit) values ($1, $2, $3, $4, $5) returning id', [new Date(), userId, nameProduct, categoryId, unit])
+                        .then((row) => {
+                            // console.log(id)
+                            res.status(200).json({'result': row[0].id})
                         })
                 }
             })

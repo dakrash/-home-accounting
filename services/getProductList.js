@@ -3,6 +3,8 @@ module.exports = function (db, userId, res) {
         db.query(res, `select
         c.id as category_id,
         c.name as category_name,
+        c.coef as category_coef,
+        c.parent_id as category_parent_id,
         cc.name as parentCategoryName,
         p.id as product_id,
         p.name as product_name,

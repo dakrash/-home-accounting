@@ -18,6 +18,7 @@ module.exports = function (db, app, hash, express) {
 
 
     app.use(function (req, res, next) {
+        console.log("req")
         if (req.cookies.token) {
             token = req.cookies.token;
             checkToken(token, hash, db, res)
