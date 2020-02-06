@@ -43,62 +43,32 @@ module.exports = function (db, express, userId) {
                 if (result.length > 0) {
                     getListData(res, db, idList)
                         .then((arrCategories) => {
-                            // res.render('lists.hbs', {
-                            //     path: '../../',
-                            //     title: "Семейная статистика",
-                            //     rows: {
-                            //         header: result[0].name,
-                            //         id: idList,
-                            //         categories: arrCategories
-                            //     },
-                            //     button: [
-                            //         {id: 'addPosition', text: 'Добавить позицию', class: 'btn-custom-yellow'},
-                            //         {id: 'editList', text: 'Изменить список', class: 'btn-custom-yellow'},
-                            //         {id: 'delList', class: 'btn-custom-red', text: 'Удалить список'}
-                            //     ],
-                            //     shoppingLists: shoppingLists,
-                            //     script: ['../../js/shoppingList.js', '../../js/counter.js'],
-                            //     email: email
-                            // })
-                            // console.log(arrCategories);
                             var items = [];
+                            console.log("arrCategories")
+                            console.log(arrCategories)
                             arrCategories.forEach(category => {
                                 let pos = category.items;
                                 pos.forEach(item => {
                                     items.push({ id: item.idRow,
                                         productId: item.idProduct,
-                                        quantity: item.quantity,
+                                        productName: item.name,
+                                        productUnit: item.unit,
+                                        categoryId: category.id,
+                                        categoryName: category.name,
+                                        quantity: item.quant,
                                         comment: item.comment,
-                                        check: item.checkbox})
+                                        check: item.checkbox ? true : false})
                                 })
 
                             })
-                            // arrCategories.map(category => {
-                            //     let position = category.items;
-                            //     console.log(position)
-                            //     return {
-                            //         id: position.id,
-                            //         productId: position.idProduct,
-                            //         quantity: position.quantity,
-                            //         comment: position.comment,
-                            //         check: position.checkbox
-                            //     }
-                            // })
-                            res.status(200).json({name: result[0].name, products: items})
+                            console.log("items")
+                            console.log(items)
+                            res.status(200).json(items)
                         })
                 } else {
                     res.status(404).send('Список не найден')
                 }
             })
-        // let idList = req.params.id;
-        // getList(db, idList, userId, res)
-        //     .then((result) => {
-        //         if (result.length > 0) {
-        //             res.status(200).send(result)
-        //         } else {
-        //             res.status(404).send('Список не найден')
-        //         }
-        //     })
     });
 
     router.get('/getName/:id', function (req, res, next) {
@@ -127,6 +97,21 @@ module.exports = function (db, express, userId) {
                     }
                 })
         })
+    })
+
+        router.post('/upCheckboxVal/app', function (req, res, next) {
+            var values = req.body.values;
+            values = JSON.parse(values);
+            values.forEach(function (el, i) {
+                // el = JSON.parse(el);
+                updateCheckboxes(el)
+                    .then(() => {
+                        if (!values[i + 1]) {
+                            res.status(200).send({'result': 'OK'})
+                        }
+                    })
+            })
+        })
 
 
         function updateCheckboxes(el) {
@@ -137,7 +122,7 @@ module.exports = function (db, express, userId) {
                     })
             })
         }
-    })
+    // })
 
     router.post('/add', function (req, res, next) {
         console.log('test shopping add');

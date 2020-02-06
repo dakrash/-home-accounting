@@ -1,6 +1,6 @@
 module.exports = function (res, db, idList) {
     return new Promise((resolve, reject) => {
-        db.query(res, 'select sp.id as idRow, sp.product_name, p.id as idProduct, p.name, sp.quantity, p.unit, sp.comment, c.name as categoryName, c.id as categoryId, c.parent_id as categoryParentId, cc.name as categoryParentName, sp.checkbox from shopping_list_product as sp left join products as p on sp.product_id = p.id left join category as c on p.category_id = c.id or sp.category_id = c.id left join category as cc on c.parent_id = cc.id where shopping_list_id = $1 order by c.name, cc.name, sp.checkbox, p.name, sp.product_name', [idList])
+        db.query(res, 'select sp.id as idRow, sp.product_name, sp.product_name as productName, p.id as idProduct, p.name, sp.quantity, p.unit, sp.comment, c.name as categoryName, c.id as categoryId, c.parent_id as categoryParentId, cc.name as categoryParentName, sp.checkbox from shopping_list_product as sp left join products as p on sp.product_id = p.id left join category as c on p.category_id = c.id or sp.category_id = c.id left join category as cc on c.parent_id = cc.id where shopping_list_id = $1 order by c.name, cc.name, sp.checkbox, p.name, sp.product_name', [idList])
             .then((rows) => {
                 let arrCategories = [];
                 rows.forEach(function (el) {
@@ -16,6 +16,8 @@ module.exports = function (res, db, idList) {
                         if (el.idproduct) {
                             product.idProduct = el.idproduct;
                             product.name = el.name;
+                            product.quant = el.quantity;
+                            product.unit = el.unit;
                             product.quantity += ' ' + el.unit;
                         } else {
                             product.name = el.product_name;

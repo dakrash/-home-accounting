@@ -106,14 +106,16 @@ module.exports = function (db, express) {
 
 
     router.post('/:idList/addArrProd', function (req, res) {
+        console.log(req.body);
         let idList = req.params.idList;
         let reqText = 'insert into shopping_list_product(checkbox, createdate, shopping_list_id, quantity, comment, product_id) values';
         let allParams = [];
         req.body.products.forEach((prod, i) => {
+
             let productId = prod.id;
             let productQuantity = prod.quantity;
             let productComment = prod.comment;
-            let params = [0, new Date(), idList, productQuantity, productComment ? productComment : "", productId];
+            let params = [0, new Date(), idList, productQuantity, productComment, productId];
             if (i > 0) {
                 reqText += ','
             }
@@ -125,12 +127,50 @@ module.exports = function (db, express) {
                 allParams.push(el)
             });
             reqText += ')';
-
         });
-        console.log(reqText, allParams);
+
         db.query(res, reqText, allParams)
             .then(() => {
-                res.sendStatus(200)
+                res.status(200).send({result: 'OK'})
+            })
+    })
+
+    router.post('/changeArrProds', function (req, res) {
+        console.log(req.body);
+        let reqText = `INSERT INTO shopping_list_product (id, updatedate, quantity, comment)
+        VALUES `;
+        let allParams = [];
+        req.body.products.forEach((prod, i) => {
+            console.log(prod);
+            prod = JSON.parse(prod);
+            let shopPosId = prod.id;
+            let productQuantity = prod.quantity;
+            let productComment = prod.comment;
+            let params = [shopPosId, new Date(), productQuantity, productComment];
+            if (i > 0) {
+                reqText += ','
+            }
+            reqText += ' (';
+            params.forEach(function (el, j) {
+                if (j > 0)
+                    reqText += ', ';
+                reqText += '$' + (allParams.length + 1);
+                allParams.push(el)
+            });
+            reqText += ')';
+        });
+
+        reqText += `ON CONFLICT (id) DO UPDATE 
+  SET 
+                id=excluded.id,
+                updatedate=excluded.updatedate,
+                quantity=excluded.quantity,
+                comment=excluded.comment`;
+        console.log(reqText);
+        console.log(allParams);
+        db.query(res, reqText, allParams)
+            .then(() => {
+                res.status(200).send({result: 'OK'})
             })
     })
 
