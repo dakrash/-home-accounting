@@ -111,7 +111,6 @@ module.exports = function (db, app, hash, express) {
                                         resultCategories.push(el)
                                     }
                                 });
-                                console.log(products);
                                 res.render('transactions.hbs', {
                                     path: '../',
                                     title: "Семейная статистика",
@@ -193,9 +192,7 @@ module.exports = function (db, app, hash, express) {
                                                     el.type = {};
                                                     el.type.categories = true;
                                                     el.categories = arrWithSelectElem(resultCategories, el.category_id).arr;
-                                                    // el.categories.push({id:111, select:'selected', nameWithParent:'lalala'})
-                                                    console.log('el.categories');
-                                                    console.log(el.categories)
+
                                                 })
                                                 renderParams.elemsTransaction = transactions;
                                                 res.render('transactions.hbs', renderParams)

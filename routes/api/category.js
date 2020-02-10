@@ -23,7 +23,6 @@ module.exports = function (db, express, userId) {
     router.get('/app', function (req, res, next) {
         getCategory(db, userId, res)
             .then((rows) => {
-                console.log(rows)
                 res.status(200).json(rows.map(row => {
                     var result = {};
                     result.id = row.id;
@@ -31,7 +30,6 @@ module.exports = function (db, express, userId) {
                     result.coef = row.coef;
                     result.parentId = row.parent_id
                     result.parentName = row.parentname
-                    console.log(result);
                     return result
 
                 }))
@@ -92,7 +90,6 @@ module.exports = function (db, express, userId) {
     });
 
     router.post('/add', function (req, res, next) {
-        console.log("add category");
         let nameCategory = req.body.nameCategory;
         let parentId = req.body.parentId;
         let type = req.body.type;
@@ -110,7 +107,6 @@ module.exports = function (db, express, userId) {
     });
 
     router.post('/add/app', function (req, res, next) {
-        console.log("add app category");
         let nameCategory = req.body.nameCategory;
         let parentId = req.body.parentId;
         let type = req.body.type;

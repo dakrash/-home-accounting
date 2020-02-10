@@ -1,11 +1,6 @@
 module.exports = function (db, res, userId) {
     return new Promise((resolve) => {
-        // db.query(res, 'select w.*, coalesce((sum(c.sum))*(-1), 0) as balance from wallets as w left join checklist as c on c.wallet_id = w.id and c.deleted = $1 where w.user_id = $2 and w.deleted = $3 group by c.wallet_id, w.id', [0, userId, 0])
-        //     .then((rows) => {
-        //         console.log('wallets');
-        //         console.log(rows);
-        //         resolve(rows)
-        //     })
+
         db.query(res,
             'select w.id, w.name, w.firstBalance, (w.firstBalance + coalesce(t1.balance, 0)+coalesce(t2.balance, 0)) as balance from '+
         'wallets as w '+
@@ -27,8 +22,6 @@ module.exports = function (db, res, userId) {
         'as t2 on w.id = t2.wallet_id '+
         'where w.user_id = $3 and w.deleted = $1',[0,1, userId])
             .then((rows) => {
-                console.log('wallets');
-                console.log(rows);
                 resolve(rows)
             })
     })

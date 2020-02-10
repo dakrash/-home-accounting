@@ -15,8 +15,6 @@ module.exports = function (db, params, res, id) {
     })
 
     function callback(error, response, body, checkId) {
-        // console.log('response');
-        // console.log(response);
         if (response.statusCode === 202) {
             request(options, function (error, response, body) {
                 callback(error, response, body, checkId)

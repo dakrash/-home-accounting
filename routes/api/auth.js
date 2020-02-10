@@ -7,13 +7,11 @@ module.exports = function (db, express, hash) {
     var md5 = require('md5');
 
     router.use(function (req, res, next) {
-        console.log('auth');
         user = req.body.user;
         next();
     });
 
     router.post('/signin', (req, res) => {
-        console.log('signin');
         let wrongAuth = function (text) {
             res.status(400).json({"result": text});
         };
@@ -49,14 +47,11 @@ module.exports = function (db, express, hash) {
     });
 
     router.post('/signup', (req, res) => {
-        console.log('signup');
         db.query(res, "insert into users(email, password, hash, active) " +
             "values($1, $2, $3, $4)", [user.email, hash.getPassword(user.password), md5(user.email), 0])
             .then(() => {
 
                 let linkSignup = link + 'verification?key=' + md5(user.email);
-                console.log('linkSignup')
-                console.log(linkSignup)
                 sentEmail(user.email, 'Подтверждение учетной записи', 'Для подтверждение учетной записи перейдите по ссылке ' + linkSignup);
                 res.status(200).json({'result': [{message:"OK"}]});
             });

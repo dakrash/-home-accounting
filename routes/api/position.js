@@ -66,6 +66,16 @@ module.exports = function (db, express) {
             })
     });
 
+
+    router.post('/:idRow/del/app', function (req, res) {
+        console.log(':idRow/del/app');
+        let idRow = req.params.idRow;
+        db.query(res, 'delete from shopping_list_product where id = $1', [idRow])
+            .then(() => {
+                res.status(200).send({result: 'OK'})
+            })
+    });
+
     router.post('/:idList/add', function (req, res) {
         let idList = req.params.idList;
         let productId = req.body.id;
@@ -106,12 +116,11 @@ module.exports = function (db, express) {
 
 
     router.post('/:idList/addArrProd', function (req, res) {
-        console.log(req.body);
         let idList = req.params.idList;
         let reqText = 'insert into shopping_list_product(checkbox, createdate, shopping_list_id, quantity, comment, product_id) values';
         let allParams = [];
         req.body.products.forEach((prod, i) => {
-
+            prod = JSON.parse(prod);
             let productId = prod.id;
             let productQuantity = prod.quantity;
             let productComment = prod.comment;
@@ -128,20 +137,19 @@ module.exports = function (db, express) {
             });
             reqText += ')';
         });
-
+        reqText += ' returning id, product_id';
         db.query(res, reqText, allParams)
-            .then(() => {
-                res.status(200).send({result: 'OK'})
+            .then((result) => {
+                console.log(result.map(res => res.id))
+                res.status(200).send({result: result})
             })
     })
 
     router.post('/changeArrProds', function (req, res) {
-        console.log(req.body);
         let reqText = `INSERT INTO shopping_list_product (id, updatedate, quantity, comment)
         VALUES `;
         let allParams = [];
         req.body.products.forEach((prod, i) => {
-            console.log(prod);
             prod = JSON.parse(prod);
             let shopPosId = prod.id;
             let productQuantity = prod.quantity;
@@ -166,8 +174,6 @@ module.exports = function (db, express) {
                 updatedate=excluded.updatedate,
                 quantity=excluded.quantity,
                 comment=excluded.comment`;
-        console.log(reqText);
-        console.log(allParams);
         db.query(res, reqText, allParams)
             .then(() => {
                 res.status(200).send({result: 'OK'})

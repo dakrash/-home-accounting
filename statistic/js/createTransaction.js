@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    console.log("test");
     inputNumberKeydown($('[data-type="summ"]'));
     let config = {
         format: 'yyyy/mm/dd',

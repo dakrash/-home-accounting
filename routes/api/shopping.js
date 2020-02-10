@@ -44,9 +44,21 @@ module.exports = function (db, express, userId) {
                     getListData(res, db, idList)
                         .then((arrCategories) => {
                             var items = [];
-                            console.log("arrCategories")
-                            console.log(arrCategories)
                             arrCategories.forEach(category => {
+                                category.subcategories.forEach((subc, j) => {
+                                    let pos = subc.items;
+                                    pos.forEach(item => {
+                                        items.push({ id: item.idRow,
+                                            productId: item.idProduct,
+                                            productName: item.name,
+                                            productUnit: item.unit,
+                                            categoryId: subc.id,
+                                            categoryName: subc.name,
+                                            quantity: item.quant,
+                                            comment: item.comment,
+                                            check: item.checkbox ? true : false})
+                                    })
+                                });
                                 let pos = category.items;
                                 pos.forEach(item => {
                                     items.push({ id: item.idRow,
@@ -61,8 +73,6 @@ module.exports = function (db, express, userId) {
                                 })
 
                             })
-                            console.log("items")
-                            console.log(items)
                             res.status(200).json(items)
                         })
                 } else {
@@ -90,7 +100,7 @@ module.exports = function (db, express, userId) {
     router.post('/upCheckboxVal', function (req, res, next) {
         let values = req.body.values;
         values.forEach(function (el, i) {
-            updateCheckboxes(el)
+            updateCheckboxes(el, res)
                 .then(() => {
                     if (!values[i + 1]) {
                         res.status(200).send({'result': [{message: 'OK'}]})
@@ -100,11 +110,10 @@ module.exports = function (db, express, userId) {
     })
 
         router.post('/upCheckboxVal/app', function (req, res, next) {
-            var values = req.body.values;
-            values = JSON.parse(values);
+            let values = req.body.values;
             values.forEach(function (el, i) {
-                // el = JSON.parse(el);
-                updateCheckboxes(el)
+                el = JSON.parse(el);
+                updateCheckboxes(el, res)
                     .then(() => {
                         if (!values[i + 1]) {
                             res.status(200).send({'result': 'OK'})
@@ -114,9 +123,9 @@ module.exports = function (db, express, userId) {
         })
 
 
-        function updateCheckboxes(el) {
+        function updateCheckboxes(el, res) {
             return new Promise((resolve) => {
-                db.query(res, 'update shopping_list_product set checkbox = $1, updatedate = $2 where id = $3', [el.val, new Date(), el.id])
+                db.query(res, 'update shopping_list_product set checkbox = $1, updatedate = $2 where id = $3', [el.val ? 1 : 0, new Date(), el.id])
                     .then((rows) => {
                         resolve()
                     })
@@ -125,7 +134,6 @@ module.exports = function (db, express, userId) {
     // })
 
     router.post('/add', function (req, res, next) {
-        console.log('test shopping add');
         let nameList = req.body.nameList;
         db.query(res, 'insert into shopping_list(user_id, name, createdate) values($1, $2, $3)', [userId, nameList, new Date()])
             .then((rows) => {
@@ -152,6 +160,16 @@ module.exports = function (db, express, userId) {
             })
     })
 
+    router.post('/edit/:id/app', function (req, res, next) {
+        let idList = req.params.id;
+        let nameList = req.body.nameList;
+
+        db.query(res, 'update shopping_list set name = $1, updatedate = $2 where id = $3', [nameList, new Date(), idList])
+            .then((rows) => {
+                res.status(200).send({'result': 'OK'})
+            })
+    })
+
     router.post('/del/:id', function (req, res, next) {
         let idList = req.params.id;
         db.query(res, 'delete from shopping_list_product where shopping_list_id = $1', [idList])
@@ -159,6 +177,17 @@ module.exports = function (db, express, userId) {
                 db.query(res, 'delete from shopping_list where id = $1', [idList])
                     .then((rows) => {
                         res.status(200).send({'result': [{message: 'OK'}]})
+                    })
+            })
+    })
+
+    router.post('/del/:id/app', function (req, res, next) {
+        let idList = req.params.id;
+        db.query(res, 'delete from shopping_list_product where shopping_list_id = $1', [idList])
+            .then((rows) => {
+                db.query(res, 'delete from shopping_list where id = $1', [idList])
+                    .then((rows) => {
+                        res.status(200).send({'result': 'OK'})
                     })
             })
     })

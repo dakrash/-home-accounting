@@ -22,7 +22,6 @@ module.exports = function (db, express, userId) {
                     result.categoryParentId = row.category_parent_id;
                     result.categoryParentName = row.parentCategoryName;
                     result.unit = row.unit_name;
-                    console.log(result);
                     return result
                 }))
             })
@@ -56,7 +55,6 @@ module.exports = function (db, express, userId) {
                 } else {
                     db.query(res, 'INSERT INTO products(createDate, user_id, name, category_id, unit) values ($1, $2, $3, $4, $5) returning id', [new Date(), userId, nameProduct, categoryId, unit])
                         .then((row) => {
-                            // console.log(id)
                             res.status(200).json({'result': row[0].id})
                         })
                 }

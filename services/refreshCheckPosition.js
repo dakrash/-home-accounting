@@ -6,7 +6,6 @@ module.exports = function (db, res, checkPositionsData) {
         function getQueryAndParams(elemData) {
             let query = 'update checkproducts set ';
             let params = [];
-            console.log(elemData);
             if (elemData.productId || elemData.categoryId) {
                 if (elemData.productId) {
                     params.push(null);
@@ -25,7 +24,6 @@ module.exports = function (db, res, checkPositionsData) {
                 }
                 params.push(elemData.id);
                 query += ' where id = $' + params.length;
-                console.log(query);
                 return {query: query, params: params}
             } else {
                 return false

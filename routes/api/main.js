@@ -23,8 +23,7 @@ module.exports = function (db, express, hash) {
                 next()
             })
             .catch(error => {
-                console.log(error);
-                res.status(401).json({'result': 'unauthorized'})
+                res.status(401).json({'result': 'Ошибка авторизации'})
             });
     });
 

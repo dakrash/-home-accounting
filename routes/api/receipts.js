@@ -67,7 +67,6 @@ module.exports = function (db, express, userId) {
         let checkId = req.params.check_id;
         db.query(res, 'select * from checklist where id = $1', [checkId])
             .then((result) => {
-                console.log(result);
                 let params = {
                     t: result[0].t,
                     s: result[0].sum,
@@ -76,7 +75,6 @@ module.exports = function (db, express, userId) {
                     fp: result[0].fp,
                     n: result[0].n
                 };
-                console.log(params)
                 requestGetNalog(db, params, res, userId)
             })
 

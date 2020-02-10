@@ -80,7 +80,6 @@ module.exports = function (res, db, idList) {
                         }
                     }
                 )
-                console.log(arrCategories)
                 resolve(arrCategories)
             })
     })

@@ -7,8 +7,6 @@ module.exports = function (db, params, res, userId) {
     let requestGetNalogDetails = require('./requestGetNalogDetails');
 
     function callback(err, resp, body, checkId) {
-        console.log('resp.statusCode');
-        console.log(resp.statusCode);
         if (err) {
             res.status(500).send({
                 result: 'Ошибка обращения к стороннему сервису, повторите запрос позже',
@@ -50,8 +48,6 @@ module.exports = function (db, params, res, userId) {
         if (params.n === '1') {
             db.query(res, 'select * from checkList where user_id = $1 and date = $2 and sum = $3 and fn = $4 and i = $5 and fp = $6 and n = $7 and deleted = $8', [userId, params.t, params.s, params.fn, params.i, params.fp, params.n, 0])
                 .then((checkListId) => {
-                    console.log('checkListId');
-                    console.log(checkListId);
                     if (checkListId.length > 0) {
                         let checkId = checkListId[0].id;
                         // db.query(res, 'select * from checkProducts where checkList_id = $1', [checkId])
@@ -59,8 +55,6 @@ module.exports = function (db, params, res, userId) {
                         if (checkListId[0].remote_success === 1) {
                             res.status(200).json({'result': [{check_id: checkId}]})
                         } else {
-                            console.log('options');
-                            console.log(options);
                             request(options, function (err, resp, body) {
                                 callback(err, resp, body, checkId)
                             });

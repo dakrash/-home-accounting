@@ -79,9 +79,7 @@ function getWalletData() {
         showErrorAlert('Укажите первоначальный баланс');
         return false
     } else {
-        // console.log(parseFloat($('#firstBalanceWallet').val()));
         return {name: $('#nameWallet').val(), firstBalance: parseFloat($('#firstBalanceWallet').val())}
-        // return false
     }
 
 }

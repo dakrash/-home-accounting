@@ -21,7 +21,6 @@ module.exports = function (db, res, userId) {
         'left join category as ct2 on t.category_id = ct2.id '+
         'where o.deleted != $2 group by o.id, o.createdate, o.date, o.comment, w.name, ct1.coef, ct2.coef', [userId, 1])
             .then((rows) => {
-                console.log(rows);
                 rows.forEach(function (el, i) {
                     if (el.coef === -1) {
                         el.type = 'Списание'
